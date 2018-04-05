@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bird Clicker with Knockout JS</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<header>
+		<h1>Bird Clicker with Knockout JS</h1>
+	</header>
+	<main>
+		<div class="container">
+			<div class="display-bird" data-bind="with: currentBird">
+				<h2 class="bird-name" data-bind="text: birdName"></h2>
+				<h3 class="bird-level" data-bind="text: birdTitle"></h3>
+				<div class="clicks-number" data-bind="text: clicksNumber"></div>
+				<img class="bird-image" src="" alt="a picture of a bird" data-bind="click: $parent.updateClicksNumber, attr: {src:birdDisplayImg}">
+				<div><a id="bird-img-attr" href="" data-bind="attr:{href:birdAttribution}" target="_blank">Image Attribution</a></div>
+				<div class="bird-nicknames">
+					<h3>Bird's Nicknames:</h3>
+					<ul class="nicknames" data-bind="foreach: birdNicknames">
+						<li data-bind="text: $data"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="list-birds">
+				<ul class="birds" data-bind="foreach: birdsItems">
+					<li><img class="list-img" src="" data-bind="attr: {src:birdListImg}, click: $parent.setCurrentItem, css: {active: clicked}"></li>
+				</ul>
+			</div>
+		</div>
+	</main>
+
+<script src="js/node_modules/knockout/build/output/knockout-latest.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
