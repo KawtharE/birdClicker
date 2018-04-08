@@ -395,18 +395,18 @@ Same for **forEach**, it creates a new binding context in the hierarchy of bindi
 ## Version 4 -- backboneJS
 ## Responsive Design
 
-Developing responsive solutions is one the most important step to the success of your application.
+Developing responsive solutions is one of the most important step to the success of your application.
 
 Now since the most used element in this application is images, we need to think about techniques to make our images responsive and most important we are displaying the same image in two different size, normal size in the display section and small size in the list scrollbar.
 
-First of all, the HTML structure is represented in placing the display section and the list section iside a container:
+First of all, the HTML structure is represented in placing the display section and the list section inside a container:
 
 		<div class="container">
 			<div class="display-bird"></div>
 			<div class="list-birds"></div>
 		</div>
 		
-The rest is achieved in the CSS file, by affecting the *flex* value to the display property for the *container*, *justify-content* help us distribute the items inside the conatiner. For the elements inside the container, we are making their width responsive using the property *flex* which is better than using percentage width, by giving value 3 to the display section and 1 to the list section we are indicating that what ever the width of the DOM the display section will be 3 times bigger than the list section.
+The rest is achieved in the CSS file, by affecting the *flex* value to the display property for the *container* element, *justify-content* help us distribute the items inside the conatiner. For the elements inside the container, we are making their width responsive using the property *flex* which is better than using *percentage width*, by giving value 3 to the display section and 1 to the list section we are indicating that whatever the width of the DOM is, the display section will be 3 times bigger than the list section.
 
 		.container{
 			display: flex;
@@ -419,7 +419,7 @@ The rest is achieved in the CSS file, by affecting the *flex* value to the displ
 			flex: 1;
 		}
 		
-**Responsive Images:** To resize the images and generate the small images to use it in the list we have used **Grunt**.
+**Responsive Images:** To resize the images and generate the small images that we need it in the list, we have used **Grunt technique**.
 
 	$ npm install -g grunt-cli
 	$ npm install grunt-responsive-images --save
@@ -428,11 +428,14 @@ The rest is achieved in the CSS file, by affecting the *flex* value to the displ
 	$ npm install grunt-mkdir --save
 	
 We need *grunt-responsive-images, grunt-contrib-clean, grunt-contrib-copy and grunt-mkdir* to add tasks in **Gruntfile.js**:
+
 -grunt-responsive-images: to generate new sized images.
+
 -grunt-contrib-clean: to clean the directory where those new images places whenever we re-execute the grunt command.
+
 -grunt-mkdir: to create the destination directory if it is not already there.
 
-So inside the **Gruntfile.js** we add those tasks at the end:
+So inside the **Gruntfile.js** we add those tasks at the end of the file:
 
 	  grunt.loadNpmTasks('grunt-responsive-images');
 	  grunt.loadNpmTasks('grunt-contrib-clean');
@@ -440,7 +443,7 @@ So inside the **Gruntfile.js** we add those tasks at the end:
 	  grunt.loadNpmTasks('grunt-mkdir');
 	  grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images']);
 	 
-We need to add the configuration part at the beginning:
+We need to add the configuration part at the beginning, in which we indicate the new width of the images, the quality, the source, the destination etc:
 
 	grunt.initConfig({
 	 responsive_images: {
@@ -479,12 +482,12 @@ We need to add the configuration part at the beginning:
 	    },
 	});
 
-And now to have the new images we need to tap this command:
+Next, to finally get the new images we need to tap this command:
 
 	$ grunt
 	
-Now that we have the small images for the list section, back to the CSS file, in order to make both the small images and the normal images we have added this CSS rule:
+Now that we have the small images for the list section, back to the CSS file, and make sure that both the small images and the normal images are responsive. We can achieve that by just adding the following CSS rule:
 
 	max-width: 100%;
 	
-This is not optimal in all cases, actually adopting break points is much more optimal but in this application this solution works fine.
+This is not optimal in all cases, actually adopting break points and media queries is much more optimal but in this application this solution works fine.
