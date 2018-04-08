@@ -109,7 +109,7 @@ Adding the whole array of birds data to be displayed as a scrolling list:
       
 With jQuery things get more difficulte to implements every time we add a new functionalty and the code looks like a very big mess, for this reason adopting some **organizational techniques** will make our application **stable, bug-free and cleanly written**, future changes will be much more easier to add in no time. 
 
-Now with these organizational techniques we are separating things out, at this point we are talking about **separations of concerns**. So we are separating our code into three pieces: **Model, View, and * **:
+Now with these organizational techniques we are separating things out, at this point we are talking about **separations of concerns**. So we are separating our code into three pieces: **Model, View, and ***:
 
 1- The Model represents the Data.
 
@@ -266,13 +266,131 @@ the **init function** call the views init functions to setup the app.
       
 We could enter the data in the Model and not writing the function *getAllBirdItems*, but we choose too make the Model in its simplest version.
 
-=> Now to kick of the app we call at the end the **init function of the connectorVM variable**
+Now to start the app, we call at the end the **init function of the connectorVM variable**
 
       connectorVM.init();
-      
+
+=> In this version we are implementing **separation of concerns** without using any **organizational library or framework**. In the next two versions we are using two organizational libraries to achieve the goal : **KnockoutJS and BackboneJS**.
+
 ## Version 3 -- knockoutJS
 
 ![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/birdClickerKnockoutJS.gif)
+
+**KnockoutJS** is an organizational library that adopt the **MVVM pattern**.
+
+Now the five Fundamental elements in any organizational library or framework are:
+
+1- Models: represents the data.
+
+2- Collections: represents an array of Models.
+
+3- * that could be C, P, VM or whatever depending on the pattern, it just represent the connector between the Model and the view. In the Knockout case it is **VM ViewModel**.
+
+4- View: represents the interface that the user interact with.
+
+5- Routers: represnts Views for URLs.
+
+To get start with knockout of course we need to install it first:
+
+	$npm install knockout
+	
+Starting by defining our data (Model), as showing, each property is defined using **ko.observable**. Well **Observables** help us keep track of our data and whenever it change the view update immediatly, without need to any additional functions just **bind** the value to the DOM by adding **data-bind** attribute to the corresponding HTML element.
+
+We have used **ko.computed** to create the title variable since the title depends on clickNumber observable and in order to change automatically whenever the clickNumber change. We are passing in a function as first argument that will return what we are asking for, and a second parameter the keyword **this** to make sure we can use it inside the function.
+
+
+	var initialData = [
+			{
+				birdName: 'Javelin',
+				birdListImg: 'images_small/bird1-200_small.jpg',
+				birdDisplayImg: 'images/bird1.jpg',
+				birdImgAttribution: 'https://www.flickr.com/photos/hyalella/38685545911/in/gallery-flickr-72157662070816797/',
+				clicksNumber: 0,
+				clicked: false,
+				birdNicknames: ['Buzby', 'Jinn', 'Kwatoko', 'Belphegor', 'Xavea', 'Poppadom', 'Alcatraz', 'Heresa', 'Dilly', 'Brennus']
+
+			},
+			.
+			.
+			.
+	]
+	var Model = function(data){
+		this.birdName = ko.observable('Bird Name: '+data.birdName);
+		this.birdListImg = ko.observable(data.birdListImg);
+		this.birdDisplayImg = ko.observable(data.birdDisplayImg);
+		this.birdImgAttribution = ko.observable(data.birdImgAttribution);
+		this.clicksNumber = ko.observable(data.clicksNumber);
+		this.clicked = ko.observable(data.clicked);
+		this.birdNicknames = ko.observableArray(data.birdNicknames);
+		this.birdAttribution = ko.observable(data.birdImgAttribution);
+
+		this.birdTitle = ko.computed(function(){
+			this.bird_title = 'Bird Clicker Level 0';
+			if (this.clicksNumber() < 10){
+				this.bird_title = 'Bird Clicker Level 1';
+			}
+			else if ((this.clicksNumber() >= 10) && (this.clicksNumber() < 20)){
+				this.bird_title = 'Bird Clicker Level 2';
+			}
+			else {
+				this.bird_title = 'Bird Clicker Level 3';
+			}
+			return this.bird_title;
+		}, this);
+
+	}
+	
+Next, we are defining the **ViewModel** element in which we create the bird list item **observable array** from the Model data, then we initialize the display section by displaying the the first element of the array. Now since functions and forEach statement both create new context we have saved the **this** keyword, which represents the ViewModel context, inside a ne variable **self** in order to be able to use the variable available in the this context inside functions and forEach statement. 
+
+	var ViewModel = function(){
+		var self = this
+
+		this.birdsItems = ko.observableArray([]);
+		initialData.forEach(function(item){
+			self.birdsItems.push(new Model(item));
+		});
+		this.birdsItems()[0].clicked(true);
+		this.currentBird = ko.observable(this.birdsItems()[0]);
+		this.setCurrentItem = function(){
+			self.birdsItems().forEach(function(item){
+				item.clicked(false);
+			});
+			this.clicked(true);
+			self.currentBird(this);
+		};
+		this.updateClicksNumber = function(){
+			self.currentBird().clicksNumber(self.currentBird().clicksNumber() + 1);
+		}
+	}
+	
+Finally for the View part, we are not defining it in the JS file because by using the attribute **bind-data** in the HTML code we are achieving what we need. [More information about data-bind](http://knockoutjs.com/documentation/binding-syntax.html)
+
+			<div class="display-bird" data-bind="with: currentBird">
+				<h2 class="bird-name" data-bind="text: birdName"></h2>
+				<h3 class="bird-level" data-bind="text: birdTitle"></h3>
+				<div class="clicks-number" data-bind="text: clicksNumber"></div>
+				<img class="bird-image" src="" alt="a picture of a bird" data-bind="click: $parent.updateClicksNumber, attr: {src:birdDisplayImg}">
+				<div><a id="bird-img-attr" href="" data-bind="attr:{href:birdAttribution}" target="_blank">Image Attribution</a></div>
+				<div class="bird-nicknames">
+					<h3>Bird's Nicknames:</h3>
+					<ul class="nicknames" data-bind="foreach: birdNicknames">
+						<li data-bind="text: $data"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="list-birds">
+				<ul class="birds" data-bind="foreach: birdsItems">
+					<li><img class="list-img" src="" data-bind="attr: {src:birdListImg}, click: $parent.setCurrentItem, css: {active: clicked}"></li>
+				</ul>
+			</div>
+			
+Each HTML element with **data-bind** attribute bind a value of a bird observable object.
+
+Now for the first div element that contain the **with binding**, the binding context is not the **ViewModel context**, it is the **currentBird context** since the **'with'** creates a new binding context, so if we need to access a variable or a function that it is defined in the ViewModel context we need to add to the data-bind value **$parent** like we have done to the *updateClicksNumber* function, since it have been defined in the ViewModel context and not the currentBird context.
+
+=> **The binding context** holds data that you can reference directly from your bindings. [More information about 'with' binding](http://knockoutjs.com/documentation/with-binding.html)
+
+Same for **forEach**, it creates a new binding context in the hierarchy of binding context. [More information about 'forEach' binding](http://knockoutjs.com/documentation/foreach-binding.html)
 
 ## Version 4 -- backboneJS
 ## Responsive Design
