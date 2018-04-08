@@ -15,16 +15,16 @@ The solution is responsive since I have adopted the **Flexbox** approach.
 
 The difference between these four versions is the way we implements the functionalities of the app. In the first version, with jQuery we are not using any kind of libraries just a pure jQuery functions. In the other versions, we are writing more professional, clean and stable code using organizational techniques.
 
-## Version 1 --jQuery
+## Version 1 -- jQuery
 
 ![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/birdClickerJQuery.gif)
 
-## Version 2 --vanillaJS
+## Version 2 -- vanillaJS
 
 ![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/birdClickerVanillaJS.gif)
 
-## Version 3 --knockoutJS
+## Version 3 -- knockoutJS
 
-![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/birdClickerKnockoutJS.gif.gif)
+![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/birdClickerKnockoutJS.gif)
 
-## Version 4 --backboneJS
+## Version 4 --b ackboneJS
