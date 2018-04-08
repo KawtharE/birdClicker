@@ -1,7 +1,7 @@
 # BirdClicker
 Bird Clicker app: Inspired from the Cow Clicker app the social game on Facebook by **Ian Bogost**.
 
-The application have a picture of a bird with the bird name, title and number of clicks, all displayed when clicking on one of the list item which is actually a small version of the same displayed image generated using **Gulp**, the number of clicks increment whenever we click on the displayed image.
+The application have a picture of a bird with the bird name, title and number of clicks, all displayed when clicking on one of the list item which is actually a small version of the same displayed image generated using **Grunt**, the number of clicks increment whenever we click on the displayed image.
 
 The solution is responsive since I have adopted the **Flexbox** approach. 
 
@@ -11,9 +11,9 @@ The solution is responsive since I have adopted the **Flexbox** approach.
 
 **Version 3 with knockoutJS**
 
-**Version 3 with backboneJS**
+**Version 4 with backboneJS**
 
-The difference between these four versions is the way we implements the functionalities of the app. In the first version, with jQuery we are not using any kind of libraries just a pure jQuery functions. In the other versions, we are writing more professional, clean and stable code using **organizational techniques**.
+The difference between these four versions is the way we implements the functionalities of the app. In the first version, with jQuery, we are not using any kind of libraries just a pure jQuery functions. In the other versions, we are writing more professional, clean and stable code using **organizational techniques**.
 
 ## Version 1 -- jQuery
 
@@ -21,9 +21,9 @@ The difference between these four versions is the way we implements the function
 
 With **jQuery** we are grabbing DOM elements that we are going to update conditionally by adding dynamically some HTML code, in order to display the data that we have initially save it in an array (in this case our data are static so we keep it in an array).
 
-All we need is installing jQuery:
+All we need to install is jQuery itself:
 
-      $npm install jquery@3.3.1
+      $ npm install jquery@3.3.1
 
 ##### 1- Grabbing the DOM elements
 
@@ -107,9 +107,9 @@ Adding the whole array of birds data to be displayed as a scrolling list:
 
       })();
       
-With jQuery things get more difficulte to implements every time we add a new functionalty and the code looks like a very big mess, for this reason adopting some **organizational techniques** will make our application **stable, bug-free and cleanly written**, future changes will be much more easier to add in no time. 
+With jQuery things get more complex every time we add a new functionalty and the code looks like a very big mess, for this reason adopting some **organizational techniques** will make our application **stable, bug-free and cleanly written**, and future changes will be much more easier and can be added in no time. 
 
-Now with these organizational techniques we are separating things out, at this point we are talking about **separations of concerns**. So we are separating our code into three pieces: **Model, View, and ***:
+Now with these organizational techniques we are separating things out, at this point we are talking about **separations of concerns**. So we are separating our code into three pieces: **Model, View, and * .**
 
 1- The Model represents the Data.
 
@@ -131,13 +131,13 @@ Now with these organizational techniques we are separating things out, at this p
 		birdItems: []
 	};
 
-The model is a **literal object**. In this case, it contain two properties, the *currentBird* which represents the current bird displayed in the display section in the DOM and that will be updated every time the user click on one of the list items, and the *birdItems* which is right now an empty array that will be filled soon with a bunch of data.
+The model is a **literal object**. In this case, it contain two properties, the *currentBird* which represents the current bird displayed in the display section of the DOM and that will be updated every time the user click on one of the list items, and the *birdItems* which is right now an empty array that will be filled soon with a bunch of data.
 
 2- The View:
 
-we are separating the view here into two pieces of view, a view for the display section and another for the list of items. That was a choice just to make things more clear.
+we are separating the view here into two pieces, a view for the display section and a view for the list of items. That was a choice just to make things more clear.
 
-In each view we are defining tow functions, **inti** and **render**.
+In each view we are defining tow functions, **init** and **render**.
 
 In the **init function** we are grabbing elements from the DOM that we will update and that we need to grab only once, also we are calling the render function.
 
@@ -206,7 +206,7 @@ In the **render function** we are implementing the functionalties that update th
  
  3- The * (in our case we are calling it connectorVM)
  
-The connectorVM holds on all the functions that we need to achieve the features of the application, in this case: *seeting the current bird, getting the current bird, incrementing the click number, updating the title and getting all available data*. These function are called by views in order to not connect diractly to the Model and keep things separate. 
+The connectorVM holds on all the functions that we need to achieve the features of the application, in this case: *seeting the current bird, getting the current bird, incrementing the click number, updating the title and getting all available data*. These functions are called by views in order to not connect directly to the Model and keep things separate. 
 
 the **init function** call the views init functions to setup the app.
 
@@ -284,7 +284,7 @@ Now the five Fundamental elements in any organizational library or framework are
 
 2- Collections: represents an array of Models.
 
-3- * that could be C, P, VM or whatever depending on the pattern, it just represent the connector between the Model and the view. In the Knockout case it is **VM ViewModel**.
+3- * that could be C (Controller), P (Presenter), VM (ViewModel) or whatever depending on the pattern (MVC, MVP, MVVM, MV*), in all cases it represents the connector between the Model and the view. In the Knockout case it is **VM (ViewModel)**.
 
 4- View: represents the interface that the user interact with.
 
@@ -292,11 +292,11 @@ Now the five Fundamental elements in any organizational library or framework are
 
 To get start with knockout of course we need to install it first:
 
-	$npm install knockout
+	$ npm install knockout
 	
 Starting by defining our data (Model), as showing, each property is defined using **ko.observable**. Well **Observables** help us keep track of our data and whenever it change the view update immediatly, without need to any additional functions just **bind** the value to the DOM by adding **data-bind** attribute to the corresponding HTML element.
 
-We have used **ko.computed** to create the title variable since the title depends on clickNumber observable and in order to change automatically whenever the clickNumber change. We are passing in a function as first argument that will return what we are asking for, and a second parameter the keyword **this** to make sure we can use it inside the function.
+We have used **ko.computed** to create the *title variable* since the *title* depends on *clickNumber* observable and in order to change it automatically whenever the *clickNumber* change. We are passing in a function as first argument that will return what we are asking for (the title value), and a second parameter, the keyword **this** to make sure we can use it inside the function.
 
 
 	var initialData = [
@@ -340,7 +340,7 @@ We have used **ko.computed** to create the title variable since the title depend
 
 	}
 	
-Next, we are defining the **ViewModel** element in which we create the bird list item **observable array** from the Model data, then we initialize the display section by displaying the the first element of the array. Now since functions and forEach statement both create new context we have saved the **this** keyword, which represents the ViewModel context, inside a ne variable **self** in order to be able to use the variable available in the this context inside functions and forEach statement. 
+Next, we are defining the **ViewModel** part in which we create the bird list as an **observable array** from the Model data, then we initialize the display section by displaying the first element of the array. Now since functions and forEach statement both create new context we have saved the **this** keyword, which represents the ViewModel context, inside a ne variable **self** in order to be able to use the variables available in the this context inside functions and forEach statement. 
 
 	var ViewModel = function(){
 		var self = this
@@ -384,9 +384,9 @@ Finally for the View part, we are not defining it in the JS file because by usin
 				</ul>
 			</div>
 			
-Each HTML element with **data-bind** attribute bind a value of a bird observable object.
+Each HTML element with **data-bind** attribute bind the value of the indicated property of the bird observable object.
 
-Now for the first div element that contain the **with binding**, the binding context is not the **ViewModel context**, it is the **currentBird context** since the **'with'** creates a new binding context, so if we need to access a variable or a function that it is defined in the ViewModel context we need to add to the data-bind value **$parent** like we have done to the *updateClicksNumber* function, since it have been defined in the ViewModel context and not the currentBird context.
+Now for the first div element that contain the **'with' binding**, the binding context is not the **ViewModel context**, it is the **currentBird context** since the **'with'** creates a new binding context, so if we need to access a variable or a function that it is defined in the ViewModel context we need to add to the data-bind value **$parent** like we have done to the *updateClicksNumber* function, since it have been defined in the ViewModel context and not the currentBird context.
 
 => **The binding context** holds data that you can reference directly from your bindings. [More information about 'with' binding](http://knockoutjs.com/documentation/with-binding.html)
 
@@ -394,3 +394,97 @@ Same for **forEach**, it creates a new binding context in the hierarchy of bindi
 
 ## Version 4 -- backboneJS
 ## Responsive Design
+
+Developing responsive solutions is one the most important step to the success of your application.
+
+Now since the most used element in this application is images, we need to think about techniques to make our images responsive and most important we are displaying the same image in two different size, normal size in the display section and small size in the list scrollbar.
+
+First of all, the HTML structure is represented in placing the display section and the list section iside a container:
+
+		<div class="container">
+			<div class="display-bird"></div>
+			<div class="list-birds"></div>
+		</div>
+		
+The rest is achieved in the CSS file, by affecting the *flex* value to the display property for the *container*, *justify-content* help us distribute the items inside the conatiner. For the elements inside the container, we are making their width responsive using the property *flex* which is better than using percentage width, by giving value 3 to the display section and 1 to the list section we are indicating that what ever the width of the DOM the display section will be 3 times bigger than the list section.
+
+		.container{
+			display: flex;
+			justify-content: flex-start;
+		}
+		.display-bird{
+			flex: 3;
+		}
+		.list-birds{
+			flex: 1;
+		}
+		
+**Responsive Images:** To resize the images and generate the small images to use it in the list we have used **Grunt**.
+
+	$ npm install -g grunt-cli
+	$ npm install grunt-responsive-images --save
+	$ npm install grunt-contrib-clean --save
+	$ npm install grunt-contrib-copy --save
+	$ npm install grunt-mkdir --save
+	
+We need *grunt-responsive-images, grunt-contrib-clean, grunt-contrib-copy and grunt-mkdir* to add tasks in **Gruntfile.js**:
+-grunt-responsive-images: to generate new sized images.
+-grunt-contrib-clean: to clean the directory where those new images places whenever we re-execute the grunt command.
+-grunt-mkdir: to create the destination directory if it is not already there.
+
+So inside the **Gruntfile.js** we add those tasks at the end:
+
+	  grunt.loadNpmTasks('grunt-responsive-images');
+	  grunt.loadNpmTasks('grunt-contrib-clean');
+	  grunt.loadNpmTasks('grunt-contrib-copy');
+	  grunt.loadNpmTasks('grunt-mkdir');
+	  grunt.registerTask('default', ['clean', 'mkdir', 'responsive_images']);
+	 
+We need to add the configuration part at the beginning:
+
+	grunt.initConfig({
+	 responsive_images: {
+	      dev: {
+	        options: {
+	          engine: 'im',
+	          sizes: [{
+	            width: 200,
+	            suffix: '_small',
+	            quality: 100
+	          }]
+	        },
+	        files: [{
+	          expand: true,
+	          src: ['*.{gif,jpg,png}'],
+	          cwd: 'images/',
+	          dest: 'images_small/'
+	        }]
+	      }
+	    },
+
+	    /* Clear out the images_small directory if it exists */
+	    clean: {
+	      dev: {
+	        src: ['images_small'],
+	      },
+	    },
+
+	    /* Generate the images_small directory if it is missing */
+	    mkdir: {
+	      dev: {
+	        options: {
+	          create: ['images_small']
+	        },
+	      },
+	    },
+	});
+
+And now to have the new images we need to tap this command:
+
+	$ grunt
+	
+Now that we have the small images for the list section, back to the CSS file, in order to make both the small images and the normal images we have added this CSS rule:
+
+	max-width: 100%;
+	
+This is not optimal in all cases, actually adopting break points is much more optimal but in this application this solution works fine.
