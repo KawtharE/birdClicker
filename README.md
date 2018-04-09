@@ -421,19 +421,33 @@ Backbone hard dependency is the library **underscore** and soft dependency is **
 The structure of the whole project is like shown next:
 
 ---CSS
-   |---main.css
+
+ |---main.css
+   
 ---JS
-   |---collections
-       |---birds-collection.js
-   |---models
-       |---bird-model.js
-   |---routers
-       |---router.js
-   |---views
-       |---app-view.js
-       |---display-view.js
-       |---list-view.js
-   |---script.js
+
+ |---collections
+   
+   |---birds-collection.js
+       
+ |---models
+   
+   |---bird-model.js
+       
+ |---routers
+   
+   |---router.js
+       
+ |---views
+   
+   |---app-view.js
+       
+   |---display-view.js
+       
+   |---list-view.js
+       
+ |---script.js
+   
 ---index.html
 
 Starting with the **HTML file: index.html** where we need to import all the **js file** on addition to the previous libraries. **Note** that the order in which we import these files is important we have to keep the **script.js** file to the end, since it starts the whole app we need to setup first of all the models, views, etc.
