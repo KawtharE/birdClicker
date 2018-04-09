@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bird Clicker with BackboneJS</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+	<header>
+		<h1>Bird Clicker with BackboneJS</h1>
+	</header>
+	<main>
+		<div class="container" id="container">
+			<div class="display" id="display"></div>
+			<div class="list"><ul id="list"></ul></div>
+		</div>
+	</main>
+
+<script type="text/template" id="item-template">
+	<% _.each(birds, function(bird){ %>
+		<li class="list-item" id="list-item<%= bird.id %>" data-name="<%= bird.birdName %>"><img id="list-item" src="<%= bird.birdListImg %>"></li>
+	<% }); %>
+</script>
+<script type="text/template" id="display-template">
+	<h2>Bird Name: <%- bird.birdName %></h2>
+	<h3 id="title">Bird Clicker Level <%= title %></h3>
+	<div>Clicks Number: <span id="clicks-number"> <%- bird.clicksNumber %> </span></div>
+	<img class="displayed-item" id="displayed-item<%- bird.id %>" src="<%- bird.birdDisplayImg %>" alt="a picture of a bird">
+	<div><a id="bird-img-attr" href="<%- bird.birdImgAttribution %>" target="_blank">Image Attribution</a></div>	
+</script>
+
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/underscore/underscore.js"></script>
+	<script src="node_modules/backbone/backbone.js"></script>
+	<script src="node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
+
+	<script src="js/models/bird-model.js"></script>
+	<script src="js/collections/birds-collection.js"></script>
+	<script src="js/routers/router.js"></script>
+	<script src="js/views/list-view.js"></script>
+	<script src="js/views/display-view.js"></script>
+	<script src="js/views/app-view.js"></script>
+	<script src="js/script.js"></script>
+</body>
+</html>
