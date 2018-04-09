@@ -59,8 +59,6 @@ Initialize the View with the Data of the first element in the array:
       // set up the initial state of the display view
       (function addBirdDisplay(){
         var count = 0;
-        var item = $('#list-item0');
-        item.addClass('active');
         display_name.text('Bird Name: '+birds_list[0].name);
         display_img.attr('src', birds_list[0].displayImg);
         display_img_attr.attr('href', birds_list[0].imgAttribution);
@@ -85,9 +83,6 @@ Adding the whole array of birds data to be displayed as a scrolling list:
           var item = $('#list-item'+i+'');
           item.on('click',(function(bird, item){
             return function(){
-              var items = $('.list-item');
-              items.removeClass('active');
-              item.addClass('active');
               display_img.attr('src', bird.displayImg);
               display_img_attr.attr('href', bird.imgAttribution);
               display_name.text('Bird Name: '+bird.name);
@@ -393,6 +388,210 @@ Now for the first div element that contain the **'with' binding**, the binding c
 Same for **forEach**, it creates a new binding context in the hierarchy of binding context. [More information about 'forEach' binding](http://knockoutjs.com/documentation/foreach-binding.html)
 
 ## Version 4 -- backboneJS
+
+![Starting Screen](https://github.com/KawtharE/birdClicker/blob/master/assets/BirdClickerBackboneJS.gif)
+
+The **BackboneJS** is an organizational library, that is made up of these five modules:
+
+   1- Views
+   
+   2- Events
+    
+   3- Models
+   
+   4- Collections
+   
+   5- Routers
+   
+Backbone is unique, it do things on its own way. It is not MVC, nor MVP and not even MVVM, but still from the MV* family.
+
+Backbone hard dependency is the library **underscore** and soft dependency is **jQuery**, so we are going to start by downloading these neccessary libraries and imported in the HTML file:
+
+	$ npm install underscore
+	$ npm install jquery@3.3.1
+	$ npm install backbone
+	$ npm install backbone.localstorage
+	
+
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/underscore/underscore.js"></script>
+	<script src="node_modules/backbone/backbone.js"></script>
+	<script src="node_modules/backbone.localstorage/build/backbone.localStorage.js"></script>
+	
+The structure of the whole project is like shown next:
+
+---CSS
+   |---main.css
+---JS
+   |---collections
+       |---birds-collection.js
+   |---models
+       |---bird-model.js
+   |---routers
+       |---router.js
+   |---views
+       |---app-view.js
+       |---display-view.js
+       |---list-view.js
+   |---script.js
+---index.html
+
+Starting with the **HTML file: index.html** where we need to import all the **js file** on addition to the previous libraries. **Note** that the order in which we import these files is important we have to keep the **script.js** file to the end, since it starts the whole app we need to setup first of all the models, views, etc.
+
+	<script src="js/models/bird-model.js"></script>
+	<script src="js/collections/birds-collection.js"></script>
+	<script src="js/routers/router.js"></script>
+	<script src="js/views/list-view.js"></script>
+	<script src="js/views/display-view.js"></script>
+	<script src="js/views/app-view.js"></script>
+	<script src="js/script.js"></script>
+	
+Next, we will be setting up the container, in which the views will be rendered:
+
+		<div class="container" id="container">
+			<div class="display" id="display"></div>
+			<div class="list"><ul id="list"></ul></div>
+		</div>
+		
+Now, since the views will be rendered dynamically and in order to avoid coding the views template in the js files we will be using **Templates**, which is in fact a *script* with *text/template* type. The template with the *id* **item-template** is for the list of images and the template with the *id* **display-template** is for the display section in the container.
+
+	<script type="text/template" id="item-template">
+		<% _.each(birds, function(bird){ %>
+			<li class="list-item" id="list-item<%= bird.id %>" data-name="<%= bird.birdName %>"><img id="list-item" src="<%= bird.birdListImg %>"></li>
+		<% }); %>
+	</script>
+
+	<script type="text/template" id="display-template">
+		<h2>Bird Name: <%- bird.birdName %></h2>
+		<h3 id="title">Bird Clicker Level <%= title %></h3>
+		<div>Clicks Number: <span id="clicks-number"> <%- bird.clicksNumber %> </span></div>
+		<img class="displayed-item" id="displayed-item<%- bird.id %>" src="<%- bird.birdDisplayImg %>" alt="a picture of a bird">
+		<div><a id="bird-img-attr" href="<%- bird.birdImgAttribution %>" target="_blank">Image Attribution</a></div>	
+	</script>
+	
+For the rest of **js files** no matter it is Model, View, Collection or router the structer is the same:
+
+	//verify if the app is already created or not, if not app will take an empty literal object as value
+	var app = app || {};
+
+	//IIFE- Immediate Invoked Function Expressions
+	(function(){
+		.
+		.
+		.
+	})()
+	
+**Model:**
+
+	var app = app || {};
+
+	(function(){
+		'use strict';
+
+		app.Bird = Backbone.Model.extend({
+			default: {
+				birdName: '',
+				birdListImg: '',
+				birdDisplayImg: '',
+				birdImgAttribution: '',
+				clicksNumber: 0,
+				id: 0
+			},
+			...
+		});
+	})();
+	
+**Collection:**
+
+	var app = app || {};
+
+	(function(){
+		'use strict';
+
+		app.birds = new Backbone.Collection([
+			{
+				birdName: 'Javelin',
+				birdListImg: 'images_small/bird1-200_small.jpg',
+				birdDisplayImg: 'images/bird1.jpg',
+				birdImgAttribution: 'https://www.flickr.com/photos/hyalella/38685545911/in/gallery-flickr-72157662070816797/',
+				clicksNumber: 0,
+				id: 0
+			},
+			...
+		])
+	})();
+
+**Router:**
+
+	var app = app || {};
+
+	(function(){
+		'use strict';
+
+		var BirdRouter = Backbone.Router.extend({
+			...
+		});
+		
+		app.BirdRouter = new BirdRouter();
+	})();
+	
+**Views:**
+
+ListView:
+
+	var app = app || {};
+
+	(function(){
+		'use strict';
+
+		app.ListView = Backbone.View.extend({
+			...
+		});
+		app.listView = new app.ListView();
+	})();
+	
+DisplayView:
+
+	var app = app || {};
+
+	(function(){
+		'use strict';
+
+		app.DisplayView = Backbone.View.extend({
+			...
+		});
+
+		app.displayView = new app.DisplayView();
+	})();
+	
+AppView:
+
+	var AppView = Backbone.View.extend({
+		el: '#container',
+		initialize: function() {
+			this.listenTo(app.birds, 'all', this.render);
+		},
+		render: function() {
+			this.container = $('#container');
+			this.list = $('#list');
+			this.display = $('#display');
+			this.list.show();
+			this.display.show();
+			this.container.show();
+		}
+	});
+	
+**script.js:**
+
+	var app = app || {};
+
+	$(function(){
+		'use strict';
+
+		var appView = new AppView();
+	});
+	
+	
 ## Responsive Design
 
 Developing responsive solutions is one of the most important step to the success of your application.
